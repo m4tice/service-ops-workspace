@@ -9,7 +9,7 @@ argument-hint: "[optional focus area]"
 Reconstruct accurate, up-to-date project and service state so the maintainer can immediately continue work in a fresh VS Code Chat or Copilot CLI session without writing or reading lengthy handover files.
 
 ## When to Use
-- The user switches to `service-ops` in a new session/workspace and says "continue", "resume", "what's the status?", or "where did we leave off?"
+- The user selects **Schaltmeister** in a new session/workspace and says "continue", "resume", "what's the status?", or "where did we leave off?"
 - Before starting non-trivial feature work when current workspace context has not yet been checked in this session.
 
 ## Procedure

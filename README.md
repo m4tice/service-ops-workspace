@@ -90,10 +90,10 @@ The manager regenerates `.vscode/mcp.json` from MCP services only, using the con
 
 ## AI Agent & Session Continuity
 
-This repository includes a shared **`service-ops`** custom agent (`.github/agents/service-ops.agent.md`), repository instructions (`.github/copilot-instructions.md`), and modular skills (`.github/skills/`) usable in both **VS Code Copilot Chat** and **GitHub Copilot CLI** (`copilot --agent service-ops` or `/agent`).
+This repository includes the shared **Schaltmeister** custom agent (`.github/agents/schaltmeister.agent.md`), repository instructions (`.github/copilot-instructions.md`), and modular skills (`.github/skills/`) usable in both **VS Code Copilot Chat** and **GitHub Copilot CLI** (`copilot --agent schaltmeister` or `/agent`).
 
 - **Skills included:** `/workspace-continuity`, `/refresh-workspace-context`, `/service-operations`, `/service-setup`, and `/workspace-development`.
-- **Seamless handoff:** Instead of writing new `HANDOVER.md` documents between sessions or VS Code workspaces, `service-ops` maintains `.github/workspace-context.md` and reconciles it against live Git/registry/process state whenever you ask it to `continue`.
+- **Seamless handoff:** Instead of writing new `HANDOVER.md` documents between sessions or VS Code workspaces, Schaltmeister maintains `.github/workspace-context.md` and reconciles it against live Git/registry/process state whenever you ask it to `continue`.
 
 ## Documentation
 

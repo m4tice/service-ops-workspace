@@ -2,7 +2,7 @@
 
 Updated: 2026-11-22
 
-> **Continuity Note:** Ongoing workspace state and session handoff are now maintained by the `service-ops` agent (`.github/agents/service-ops.agent.md`) inside [.github/workspace-context.md](.github/workspace-context.md). In a new VS Code workspace or Copilot CLI session, select `service-ops` and prompt `continue` rather than manually updating this file.
+> **Continuity Note:** Ongoing workspace state and session handoff are maintained by the **Schaltmeister** agent (`.github/agents/schaltmeister.agent.md`) inside [.github/workspace-context.md](.github/workspace-context.md). In a new VS Code workspace or Copilot CLI session, select Schaltmeister and prompt `continue` rather than manually updating this file.
 
 ## Purpose
 

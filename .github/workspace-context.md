@@ -8,10 +8,10 @@
 
 ## Current Capabilities
 - Registry validation (`repositories.toml`), non-destructive Git `sync`, isolated `setup`, foreground `run` / `run-all`, tracked background `start` / `start-all` / `stop` / `stop-all` (`.workspace_runtime/`), and `status [name ...]` (branch, worktree cleanliness, localhost TCP check, optional web HTTP `health_path`, tracked PID).
-- AI foundation (`service-ops` custom agent + skills under `.github/skills/`) shared across VS Code Chat and Copilot CLI.
+- AI foundation (`Schaltmeister` custom agent + skills under `.github/skills/`) shared across VS Code Chat and Copilot CLI.
 
 ## Active Focus & Recent Decisions
-- Established `service-ops` agent and modular skills (`workspace-continuity`, `refresh-workspace-context`, `service-operations`, `service-setup`, `workspace-development`) on `feat/ai-foundation` so new workspaces/sessions can resume directly without writing new handover docs.
+- Established the `Schaltmeister` agent and modular skills (`workspace-continuity`, `refresh-workspace-context`, `service-operations`, `service-setup`, `workspace-development`) on `feat/ai-foundation` so new workspaces/sessions can resume directly without writing new handover docs.
 - Registry `repositories.toml` currently has 0 registered services (comments only).
 
 ## Next Logical Steps

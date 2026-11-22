@@ -11,4 +11,4 @@ MCP clients/hosts and Git hosting are external system actors, not workspace main
 
 The repository-level [README](../README.md) is the quick start. The root [CHANGELOG](../CHANGELOG.md) records workspace-level changes.
 
-Ongoing AI session handoff and active state are maintained automatically by the `service-ops` agent in [.github/workspace-context.md](../.github/workspace-context.md), replacing manual handover churn (the initial baseline snapshot remains in [HANDOVER](../HANDOVER.md)).
+Ongoing AI session handoff and active state are maintained automatically by the Schaltmeister agent in [.github/workspace-context.md](../.github/workspace-context.md), replacing manual handover churn (the initial baseline snapshot remains in [HANDOVER](../HANDOVER.md)).
