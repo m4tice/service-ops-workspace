@@ -6,6 +6,7 @@ The workspace maintainer owns this changelog. Service maintainers record feature
 
 ## Unreleased
 
+- Added tracked background lifecycle commands (`start`, `start-all`, `stop`, `stop-all`) and named `status` filtering to `mcp-workspace`.
 - Added typed MCP and web service registry entries, configurable web commands, optional HTTP health checks, and MCP-only VS Code config generation.
 - Reframed the root project as an MCP server monitoring and operations control plane.
 - Added a registry-driven workflow for cloning and fast-forwarding independent server repositories from `main`.

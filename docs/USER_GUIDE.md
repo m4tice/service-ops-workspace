@@ -91,21 +91,33 @@ Setup synchronizes first. For each repository it creates `src/<name>/.venv` if n
 
 ```bash
 mcp-workspace status
+mcp-workspace status my-time-server my-api
 ```
 
-Status reports whether a repository is cloned, its current branch and working-tree state, and whether a TCP connection can be made to its configured localhost port. For web services with `health_path`, it also sends an HTTP GET and reports whether the response is successful. This is a shallow health check, not a feature-level validation. MCP services receive only a TCP check; use the MCP Inspector or another MCP client for protocol-level validation.
+Status reports whether a repository is cloned, its current branch and working-tree state, whether a TCP connection can be made to its configured localhost port, and whether a tracked background process is running. Pass one or more service names to inspect a subset. For web services with `health_path`, it also sends an HTTP GET and reports whether the response is successful. This is a shallow health check, not a feature-level validation. MCP services receive only a TCP check; use the MCP Inspector or another MCP client for protocol-level validation.
 
-## Run a Service
+## Start, Stop, and Run Services
 
-Start one server per terminal:
+To start and stop services in the background (with tracked PIDs in `.workspace_runtime/processes.json` and per-service logs in `.workspace_runtime/logs/`):
+
+```bash
+mcp-workspace start my-time-server
+mcp-workspace start-all
+mcp-workspace stop my-time-server
+mcp-workspace stop-all
+```
+
+Stale PID entries are pruned automatically on status, start, and stop checks. Background start/stop is a local convenience lifecycle tracker, not a boot-time daemon or auto-restart supervisor.
+
+To run one server interactively in the foreground per terminal:
 
 ```bash
 mcp-workspace run my-time-server
 ```
 
-For MCP services, the manager launches `mcp-server` in the foreground with `MCP_HOST=127.0.0.1`, its registry `MCP_PORT`, and `MCP_TRANSPORT=http`. For web services, it runs the configured command from the service checkout with `HOST=127.0.0.1` and `PORT=<configured-port>`; command arguments may use `{host}` and `{port}` placeholders. Stop it with Ctrl+C. The manager does not daemonize or restart service processes.
+For MCP services, the manager launches `mcp-server` with `MCP_HOST=127.0.0.1`, its registry `MCP_PORT`, and `MCP_TRANSPORT=http`. For web services, it runs the configured command from the service checkout with `HOST=127.0.0.1` and `PORT=<configured-port>`; command arguments may use `{host}` and `{port}` placeholders. Stop foreground runs with Ctrl+C.
 
-To start every registered service together, after running `mcp-workspace setup`, use:
+To start every registered service together in the foreground, after running `mcp-workspace setup`, use:
 
 ```bash
 mcp-workspace run-all

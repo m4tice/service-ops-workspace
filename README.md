@@ -65,12 +65,16 @@ Names and ports must be unique. The manager clones the `main` branch into `src/<
 ```bash
 mcp-workspace sync
 mcp-workspace setup
-mcp-workspace status
+mcp-workspace status [name ...]
+mcp-workspace start <name> [name ...]
+mcp-workspace start-all
+mcp-workspace stop <name> [name ...]
+mcp-workspace stop-all
 mcp-workspace run my-time-server
 mcp-workspace run-all
 ```
 
-`sync` clones missing repositories and fast-forwards clean checkouts from `origin/main`. It refuses to update a checkout with local changes, a different origin, or a branch other than `main`; it never deletes checkouts removed from the registry. `setup` syncs first, then creates each server's `.venv` and installs that checkout in editable mode. `status` reports each checkout's branch, working-tree state, and whether its configured local port accepts connections. `run <name>` launches one configured server in the foreground. `run-all` starts every registered server in one foreground command; press Ctrl+C to stop them all. Both run commands require setup first.
+`sync` clones missing repositories and fast-forwards clean checkouts from `origin/main`. It refuses to update a checkout with local changes, a different origin, or a branch other than `main`; it never deletes checkouts removed from the registry. `setup` syncs first, then creates each server's `.venv` and installs that checkout in editable mode. `status` reports each checkout's branch, working-tree state, whether its configured local port accepts connections, optional web HTTP health, and any tracked background PID; pass one or more names to inspect specific services. `start` and `start-all` launch services in the background with tracked PIDs and logs under `.workspace_runtime/`; `stop` and `stop-all` terminate tracked background services cleanly. `run <name>` launches one configured server in the foreground, and `run-all` starts every registered server in one foreground command (press Ctrl+C to stop them all). Launch commands require setup first.
 
 The manager regenerates `.vscode/mcp.json` from MCP services only, using the configured local HTTP ports and `/mcp` endpoint. Web services are launched and monitored by the workspace but are not emitted as MCP endpoints. Keep services bound to localhost behind nginx unless the deployment has appropriate authentication and network controls. Nginx configuration belongs in this workspace; service source and dependencies belong in each service repository.
 

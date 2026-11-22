@@ -26,6 +26,7 @@ These requirements are for the workspace maintainer's control-plane software. MC
 | SWR-11 | An empty registry shall be valid and produce an actionable message, not a failure. | CLI smoke test. |
 | SWR-12 | Registry changes shall not cause automatic deletion of removed repositories or their environments. | Manual workflow test and code review. |
 | SWR-13 | `run-all` shall start every registered, provisioned service with its own configured localhost port and stop the process group on Ctrl+C or unexpected child exit. | Unit test of process launch and cleanup; manual multi-service smoke test. |
+| SWR-14 | `start`, `start-all`, `stop`, and `stop-all` shall manage tracked background service processes, prune stale PID records, and expose running PIDs through `status` (including named service filters). | Unit tests for background start/stop, idempotency, stale PID pruning, and CLI dispatch. |
 
 ## Quality Requirements
 
