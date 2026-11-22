@@ -51,6 +51,7 @@ $RECYCLE.BIN/
 # Generated logs and process files
 *.log
 *.pid
+/.workspace_runtime/
 
 # nginx runtime output (keep nginx configuration tracked)
 /nginx/logs/

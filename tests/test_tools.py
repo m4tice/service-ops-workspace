@@ -12,6 +12,8 @@ from workspace_manager.repositories import (
     checkout_status,
     run_all_servers,
     run_server,
+    start_servers,
+    stop_servers,
     sync_repositories,
     write_mcp_config,
 )
@@ -250,3 +252,117 @@ def test_mcp_config_excludes_web_services(tmp_path: Path) -> None:
     config = json.loads(config_path.read_text(encoding="utf-8"))
 
     assert list(config["servers"]) == ["mcp-one"]
+
+
+def test_start_and_stop_servers_track_background_processes(monkeypatch, tmp_path: Path) -> None:
+    services = [
+        ManagedService(name="alpha", url="https://example.com/alpha.git", port=8301),
+        ManagedService(name="beta", url="https://example.com/beta.git", port=8302),
+    ]
+    executable_dir = "Scripts" if sys.platform == "win32" else "bin"
+    executable_name = "mcp-server.exe" if sys.platform == "win32" else "mcp-server"
+    for service in services:
+        checkout = tmp_path / "src" / service.name
+        executable = checkout / ".venv" / executable_dir / executable_name
+        executable.parent.mkdir(parents=True)
+        executable.touch()
+        _git(checkout, "init", "--initial-branch=main")
+
+    running_pids: set[int] = set()
+    next_pid = 4000
+
+    class FakeBackgroundProcess:
+        def __init__(self, _command, _log_handle, **_options) -> None:
+            nonlocal next_pid
+            next_pid += 1
+            self.pid = next_pid
+            running_pids.add(self.pid)
+
+        def poll(self):
+            return None
+
+    monkeypatch.setattr("workspace_manager.repositories._spawn_background_process", FakeBackgroundProcess)
+    monkeypatch.setattr("workspace_manager.repositories._port_is_online", lambda _port: False)
+    monkeypatch.setattr("workspace_manager.repositories._is_pid_running", lambda pid: pid in running_pids)
+    monkeypatch.setattr("workspace_manager.repositories._pid_command_matches", lambda _pid, _cmd: True)
+    monkeypatch.setattr("workspace_manager.repositories._terminate_pid", lambda pid, timeout=5.0: running_pids.discard(pid))
+    monkeypatch.setattr("workspace_manager.repositories.time.sleep", lambda _seconds: None)
+
+    started = start_servers(tmp_path, services)
+    assert len(started) == 2
+    assert "Started alpha (mcp) in background (pid=4001)" in started[0]
+
+    # Starting an already tracked service is idempotent
+    repeat = start_servers(tmp_path, [services[0]])
+    assert "already running (pid=4001)" in repeat[0]
+
+    status_lines = checkout_status(tmp_path, services)
+    assert "process=running(pid=4001)" in status_lines[0]
+    assert "process=running(pid=4002)" in status_lines[1]
+
+    stopped_one = stop_servers(tmp_path, ["alpha"])
+    assert stopped_one == ["Stopped alpha (pid=4001)"]
+    assert 4001 not in running_pids
+    assert 4002 in running_pids
+
+    stopped_rest = stop_servers(tmp_path, None)
+    assert stopped_rest == ["Stopped beta (pid=4002)"]
+    assert not running_pids
+    assert not (tmp_path / ".workspace_runtime" / "processes.json").exists()
+
+
+def test_stale_process_record_is_pruned_automatically(monkeypatch, tmp_path: Path) -> None:
+    service = ManagedService(name="stale-svc", url="https://example.com/stale.git", port=8305)
+    checkout = tmp_path / "src" / service.name
+    checkout.mkdir(parents=True)
+    _git(checkout, "init", "--initial-branch=main")
+
+    runtime_dir = tmp_path / ".workspace_runtime"
+    runtime_dir.mkdir(parents=True)
+    state_file = runtime_dir / "processes.json"
+    state_file.write_text(
+        json.dumps({"stale-svc": {"pid": 99999, "port": 8305, "command": ["mcp-server"]}}),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr("workspace_manager.repositories._is_pid_running", lambda _pid: False)
+    monkeypatch.setattr("workspace_manager.repositories._port_is_online", lambda _port: False)
+
+    lines = checkout_status(tmp_path, [service])
+    assert "process=running" not in lines[0]
+    assert not state_file.exists()
+
+
+def test_cli_start_stop_and_filtered_status(monkeypatch, tmp_path: Path, capsys) -> None:
+    (tmp_path / "repositories.toml").write_text(
+        '[[services]]\nname="svc-a"\ntype="mcp"\nurl="https://example.com/a.git"\nport=8401\n'
+        '[[services]]\nname="svc-b"\ntype="mcp"\nurl="https://example.com/b.git"\nport=8402\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(cli, "_workspace_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        cli,
+        "start_servers",
+        lambda _root, selected: [f"started:{item.name}" for item in selected],
+    )
+    monkeypatch.setattr(
+        cli,
+        "stop_servers",
+        lambda _root, names: [f"stopped:{name}" for name in (names or ["all"])],
+    )
+
+    monkeypatch.setattr(sys, "argv", ["mcp-workspace", "start", "svc-b"])
+    cli.main()
+    assert capsys.readouterr().out.strip() == "started:svc-b"
+
+    monkeypatch.setattr(sys, "argv", ["mcp-workspace", "status", "svc-b"])
+    cli.main()
+    assert capsys.readouterr().out.strip() == "svc-b: not cloned"
+
+    monkeypatch.setattr(sys, "argv", ["mcp-workspace", "stop", "svc-a"])
+    cli.main()
+    assert capsys.readouterr().out.strip() == "stopped:svc-a"
+
+    monkeypatch.setattr(sys, "argv", ["mcp-workspace", "stop-all"])
+    cli.main()
+    assert capsys.readouterr().out.strip() == "stopped:all"

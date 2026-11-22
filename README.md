@@ -65,12 +65,16 @@ Names and ports must be unique. The manager clones the `main` branch into `src/<
 ```bash
 mcp-workspace sync
 mcp-workspace setup
-mcp-workspace status
+mcp-workspace status [name ...]
+mcp-workspace start <name> [name ...]
+mcp-workspace start-all
+mcp-workspace stop <name> [name ...]
+mcp-workspace stop-all
 mcp-workspace run my-time-server
 mcp-workspace run-all
 ```
 
-`sync` clones missing repositories and fast-forwards clean checkouts from `origin/main`. It refuses to update a checkout with local changes, a different origin, or a branch other than `main`; it never deletes checkouts removed from the registry. `setup` syncs first, then creates each server's `.venv` and installs that checkout in editable mode. `status` reports each checkout's branch, working-tree state, and whether its configured local port accepts connections. `run <name>` launches one configured server in the foreground. `run-all` starts every registered server in one foreground command; press Ctrl+C to stop them all. Both run commands require setup first.
+`sync` clones missing repositories and fast-forwards clean checkouts from `origin/main`. It refuses to update a checkout with local changes, a different origin, or a branch other than `main`; it never deletes checkouts removed from the registry. `setup` syncs first, then creates each server's `.venv` and installs that checkout in editable mode. `status` reports each checkout's branch, working-tree state, whether its configured local port accepts connections, optional web HTTP health, and any tracked background PID; pass one or more names to inspect specific services. `start` and `start-all` launch services in the background with tracked PIDs and logs under `.workspace_runtime/`; `stop` and `stop-all` terminate tracked background services cleanly. `run <name>` launches one configured server in the foreground, and `run-all` starts every registered server in one foreground command (press Ctrl+C to stop them all). Launch commands require setup first.
 
 The manager regenerates `.vscode/mcp.json` from MCP services only, using the configured local HTTP ports and `/mcp` endpoint. Web services are launched and monitored by the workspace but are not emitted as MCP endpoints. Keep services bound to localhost behind nginx unless the deployment has appropriate authentication and network controls. Nginx configuration belongs in this workspace; service source and dependencies belong in each service repository.
 
@@ -84,6 +88,13 @@ The manager regenerates `.vscode/mcp.json` from MCP services only, using the con
 .venv/bin/python -m pytest
 ```
 
+## AI Agent & Session Continuity
+
+This repository includes the shared **Schaltmeister** custom agent (`.github/agents/schaltmeister.agent.md`), repository instructions (`.github/copilot-instructions.md`), and modular skills (`.github/skills/`) usable in both **VS Code Copilot Chat** and **GitHub Copilot CLI** (`copilot --agent schaltmeister` or `/agent`).
+
+- **Skills included:** `/workspace-continuity`, `/refresh-workspace-context`, `/service-operations`, `/service-setup`, and `/workspace-development`.
+- **Seamless handoff:** Instead of writing new `HANDOVER.md` documents between sessions or VS Code workspaces, Schaltmeister maintains `.github/workspace-context.md` and reconciles it against live Git/registry/process state whenever you ask it to `continue`.
+
 ## Documentation
 
-See [HANDOVER.md](HANDOVER.md) for the workspace status and agent handoff. See [docs/](docs/README.md) for maintainer requirements, system design, software requirements, and the user guide. Workspace changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+See [.github/workspace-context.md](.github/workspace-context.md) for the live agent-maintained workspace state (and [HANDOVER.md](HANDOVER.md) for the initial baseline snapshot). See [docs/](docs/README.md) for maintainer requirements, system design, software requirements, and the user guide. Workspace changes are recorded in [CHANGELOG.md](CHANGELOG.md).
