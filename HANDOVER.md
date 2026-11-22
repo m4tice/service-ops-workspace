@@ -2,6 +2,8 @@
 
 Updated: 2026-11-22
 
+> **Continuity Note:** Ongoing workspace state and session handoff are now maintained by the `service-ops` agent (`.github/agents/service-ops.agent.md`) inside [.github/workspace-context.md](.github/workspace-context.md). In a new VS Code workspace or Copilot CLI session, select `service-ops` and prompt `continue` rather than manually updating this file.
+
 ## Purpose
 
 This repository is the operations control plane for independently maintained MCP servers and web backends. Service code, releases, dependencies, and tests belong in each service's own Git repository. This workspace owns the registry, checkout lifecycle, isolated setup, launch/status commands, generated MCP client configuration, and operations documentation.

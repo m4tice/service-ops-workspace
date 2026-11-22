@@ -88,6 +88,13 @@ The manager regenerates `.vscode/mcp.json` from MCP services only, using the con
 .venv/bin/python -m pytest
 ```
 
+## AI Agent & Session Continuity
+
+This repository includes a shared **`service-ops`** custom agent (`.github/agents/service-ops.agent.md`), repository instructions (`.github/copilot-instructions.md`), and modular skills (`.github/skills/`) usable in both **VS Code Copilot Chat** and **GitHub Copilot CLI** (`copilot --agent service-ops` or `/agent`).
+
+- **Skills included:** `/workspace-continuity`, `/refresh-workspace-context`, `/service-operations`, `/service-setup`, and `/workspace-development`.
+- **Seamless handoff:** Instead of writing new `HANDOVER.md` documents between sessions or VS Code workspaces, `service-ops` maintains `.github/workspace-context.md` and reconciles it against live Git/registry/process state whenever you ask it to `continue`.
+
 ## Documentation
 
-See [HANDOVER.md](HANDOVER.md) for the workspace status and agent handoff. See [docs/](docs/README.md) for maintainer requirements, system design, software requirements, and the user guide. Workspace changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+See [.github/workspace-context.md](.github/workspace-context.md) for the live agent-maintained workspace state (and [HANDOVER.md](HANDOVER.md) for the initial baseline snapshot). See [docs/](docs/README.md) for maintainer requirements, system design, software requirements, and the user guide. Workspace changes are recorded in [CHANGELOG.md](CHANGELOG.md).
