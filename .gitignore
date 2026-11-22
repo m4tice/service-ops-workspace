@@ -1,0 +1,62 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.dmypy.json
+
+# Python packaging/build output
+*.egg-info/
+*.egg
+dist/
+build/
+develop-eggs/
+eggs/
+.eggs/
+pip-wheel-metadata/
+wheels/
+
+# Local Python environments
+.direnv/
+.venv/
+venv/
+env/
+ENV/
+
+# Independent repository checkouts managed from repositories.toml
+/src/*/
+
+# Test and coverage output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+
+# macOS and Windows metadata
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Generated logs and process files
+*.log
+*.pid
+
+# nginx runtime output (keep nginx configuration tracked)
+/nginx/logs/
+/nginx/cache/
+/nginx/client_body_temp/
+/nginx/proxy_temp/
+/nginx/fastcgi_temp/
+/nginx/uwsgi_temp/
+/nginx/scgi_temp/

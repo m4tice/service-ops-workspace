@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multi-mcp-workspace"
+version = "0.1.0"
+description = "A control plane for independently maintained MCP and web service repositories."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9"]
+
+[project.scripts]
+mcp-workspace = "workspace_manager.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["workspace_manager*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

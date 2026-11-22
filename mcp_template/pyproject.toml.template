@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "replace-with-server-name"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["fastmcp==4.0.5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9"]
+
+[project.scripts]
+mcp-server = "mcp_server_template.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

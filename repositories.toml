@@ -1,0 +1,2 @@
+# Add one [[services]] block per independently maintained service.
+# Set type = "mcp" or "web"; all repositories must keep their active branch named main.
